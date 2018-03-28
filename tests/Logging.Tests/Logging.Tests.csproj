@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -56,11 +56,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Logging.Abstractions\Logging.Abstractions.csproj">
       <Project>{f2a996ef-a3bf-40cc-bdaa-2344c31566d2}</Project>
-      <Name>Translations.Abstractions</Name>
+      <Name>Logging.Abstractions</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Logging\Logging.csproj">
       <Project>{48e0350f-5bff-43b1-9440-2c1605a29d85}</Project>
-      <Name>Translations</Name>
+      <Name>Logging</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

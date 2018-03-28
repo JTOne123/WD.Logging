@@ -3,6 +3,9 @@ namespace WD.Logging.Abstractions
 {
     public interface ILoggerConfiguration
     {
-        void ApplyConfiguration(ILoggerOptions);
+        void ApplyConfiguration(LoggerOptions options);
+        void ApplyConfiguration(Func<LoggerOptions, LoggerOptions> options);
+
+        ReadonlyLoggerOptions CurrentOptions { get; }
     }
 }

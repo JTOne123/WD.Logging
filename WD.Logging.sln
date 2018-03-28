@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{061BCB09-321
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{695C9382-9296-4A77-BE6D-8B95376C074F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "src\Logging\Logging.csproj", "{48E0350F-5BFF-43B1-9440-2C1605A29D85}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "src\Logging\Logging.csproj", "{48E0350F-5BFF-43B1-9440-2C1605A29D85}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C29CEEAD-5DA1-45A4-823B-F7B929E539D5}"
 	ProjectSection(SolutionItems) = preProject

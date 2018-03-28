@@ -14,7 +14,7 @@ public static class Names {
     public const string PROJECT_DESCRIPTION = @"WebDucer library for handle logging in Xamarin.Forms with dependency injection";
     public const string PROJECT_DESCRIPTION_ABSTRACTIONS = @"WebDucer abstractions for logger and logconfiguration";
     public static readonly string PROJECT_COPYRIGHTS = string.Format("MIT - (c) {0} Eugen [WebDucer] Richter", DateTime.Now.Year);
-    public static readonly string[] PROJECT_TAGS = {"Xamarin", "Xamarin.Forms", "WebDucer", "Forms", "Logging", "Log"};
+    public static readonly string[] PROJECT_TAGS = {"Xamarin", "Xamarin.Forms", "WebDucer", "Forms", "Logging", "Log", "NLog"};
 
     public const string SONARQUBE_ORGANISATION = "webducer-oss";
 }
