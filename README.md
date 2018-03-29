@@ -25,3 +25,69 @@ A generic abstraction for the logger to be used with dependency injection in Xam
 - `ILoggerConfiguration` - Abstraction, to configure the current logger with code
 
 ## Sample
+
+### Registration
+
+```csharp
+...
+containerRegistry.RegisterSingleton<ILoggerConfiguration, NLogLoggerConfiguration>();
+containerRegistry.Register(typeof(ILogger<>), typeof(NLogLoggerAdapter<>));
+...
+```
+
+### Configuration
+
+```csharp
+private void InitLogger()
+{
+    var logConfiguration = Container.Resolve<ILoggerConfiguration>();
+    logConfiguration.ApplyConfiguration(options =>
+        options
+            .WithFile("RaumAkustik.log")
+            .WithLevel(LogLevel.Trace)
+            .WithMaxSize(new FileSize { SizeType = SizeType.MibiByte, Size = 2 })
+            .WithArchiveCount(6)
+            .Compress(false)
+            .ArchiveOnStart(false)
+    );
+}
+```
+
+### Change configuration
+
+```csharp
+private void SetLogLevel(LogLevel level)
+{
+    _loggerConfiguration.ChangeConfiguration(options =>
+        options.WithLevel(level)
+    );
+}
+```
+
+### Usage
+
+```csharp
+...
+public class MyClass
+{
+    private readonly ILogger<MyClass> _looger; 
+
+    public MyClass(ILogger<MyClass> logger)
+    {
+        _logger = logger;
+    }
+...
+    private async Task SomeMethod()
+    {
+        try {
+            _logger.Trace("Start processing");
+
+            var data = await ProcessSomeData();
+
+            _logger.Trace("Finsih processing");
+        } catch (Exception ex){
+            _logger.Error(ex, "Processing failed for {0}", nameof(ProcessSomeData));
+        }
+    }
+...
+```
