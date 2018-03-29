@@ -6,9 +6,9 @@ A generic abstraction for the logger to be used with dependency injection in Xam
 
 | Service | Current Status |
 | :------ | -------------: |
-| AppVeyor last | [![Build status last](https://ci.appveyor.com/api/projects/status/i0rx89ds0nsp8yhx?svg=true)](https://ci.appveyor.com/project/WebDucer/wd-logging) |
-| AppVeyor develop | [![Build status develop](https://ci.appveyor.com/api/projects/status/i0rx89ds0nsp8yhx/branch/develop?svg=true)](https://ci.appveyor.com/project/WebDucer/wd-logging/branch/develop) |
-| AppVeyor master | [![Build status master](https://ci.appveyor.com/api/projects/status/i0rx89ds0nsp8yhx/branch/master?svg=true)](https://ci.appveyor.com/project/WebDucer/wd-logging/branch/master) |
+| AppVeyor last | [![Build status last](https://ci.appveyor.com/api/projects/status/mrn4h99t5auxc265?svg=true)](https://ci.appveyor.com/project/WebDucer/wd-logging) |
+| AppVeyor develop | [![Build status develop](https://ci.appveyor.com/api/projects/status/mrn4h99t5auxc265/branch/develop?svg=true)](https://ci.appveyor.com/project/WebDucer/wd-logging/branch/develop) |
+| AppVeyor master | [![Build status master](https://ci.appveyor.com/api/projects/status/mrn4h99t5auxc265/branch/master?svg=true)](https://ci.appveyor.com/project/WebDucer/wd-logging/branch/master) |
 | SonarCube coverage - master | [![SonarQube Coverage](https://sonarcloud.io/api/project_badges/measure?project=WD.Logging&metric=coverage)](https://sonarcloud.io/dashboard?id=WD.Logging) |
 | SonarCube technical debt - master | [![SonarQube Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=WD.Logging&metric=sqale_index)](https://sonarcloud.io/dashboard?id=WD.Logging) |
 | SonarCube Quality Gate - master | [![SonarQube Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=WD.Logging&metric=alert_status)](https://sonarcloud.io/dashboard?id=WD.Logging) |

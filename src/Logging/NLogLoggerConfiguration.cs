@@ -60,6 +60,17 @@ namespace WD.Logging
                 throw new ArgumentNullException(nameof(options), "Null options are not allowed");
             }
 
+            var configOptions = options(new LoggerOptions());
+            ApplyConfiguration(configOptions);
+        }
+
+        /// <inheritdoc />
+        public void ChangeConfiguration(Func<LoggerOptions, LoggerOptions> options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options), "Null options are not allowed");
+            }
             var configOptions = options(new LoggerOptions(CurrentOptions));
             ApplyConfiguration(configOptions);
         }
