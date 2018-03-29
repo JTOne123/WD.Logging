@@ -145,7 +145,7 @@ Task("_runCodeCoverageTests")
         };
 
         var coverSettings = new DotCoverCoverSettings {}
-            .WithFilter("+:assembly=" + Names.PROJECT_ID);
+            .WithFilter("+:assembly=" + Names.PROJECT_ID)
             .WithFilter("+:assembly=" + Names.PROJECT_ID_ABSTRACTIONS);
         
         DotCoverCover(tools =>
