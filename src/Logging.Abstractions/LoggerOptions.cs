@@ -9,24 +9,16 @@
         /// Initialize from readonly options
         /// </summary>
         /// <param name="readOnlyOptions">Read only options</param>
-        public LoggerOptions(ReadonlyLoggerOptions readOnlyOptions)
+        public static LoggerOptions CopyFromReadonly(ReadonlyLoggerOptions readOnlyOptions) => new LoggerOptions
         {
-            FileName = readOnlyOptions.FileName;
-            IsCompressed = readOnlyOptions.IsArchiveOnStart;
-            Level = readOnlyOptions.Level;
-            ArchiveCount = readOnlyOptions.ArchiveCount;
-            SizePerFile = readOnlyOptions.SizePerFile;
-            IsArchiveOnStart = readOnlyOptions.IsArchiveOnStart;
-            Filter = readOnlyOptions.Filter;
-        }
-
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public LoggerOptions()
-        {
-
-        }
+            FileName = readOnlyOptions.FileName,
+            IsCompressed = readOnlyOptions.IsArchiveOnStart,
+            Level = readOnlyOptions.Level,
+            ArchiveCount = readOnlyOptions.ArchiveCount,
+            SizePerFile = readOnlyOptions.SizePerFile,
+            IsArchiveOnStart = readOnlyOptions.IsArchiveOnStart,
+            Filter = readOnlyOptions.Filter
+        };
 
         /// <summary>
         /// Set log level with fluent API
@@ -88,12 +80,19 @@
             return this;
         }
 
+        /// <summary>
+        /// Set the logger filter
+        /// </summary>
+        /// <param name="filter">Filter definition (NULL -> no filter)</param>
         public LoggerOptions WithFilter(string filter)
         {
             Filter = filter;
             return this;
         }
 
+        /// <summary>
+        /// Reset the logger filter to default
+        /// </summary>
         public LoggerOptions WithoutFilter() => WithFilter(null);
     }
 }

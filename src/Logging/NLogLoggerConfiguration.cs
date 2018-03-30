@@ -3,6 +3,9 @@ using WD.Logging.Abstractions;
 
 namespace WD.Logging
 {
+    /// <summary>
+    /// Implementation of logger configuration for NLog
+    /// </summary>
     public class NLogLoggerConfiguration : ILoggerConfiguration
     {
         /// <summary>
@@ -71,7 +74,7 @@ namespace WD.Logging
             {
                 throw new ArgumentNullException(nameof(options), "Null options are not allowed");
             }
-            var configOptions = options(new LoggerOptions(CurrentOptions));
+            var configOptions = options(LoggerOptions.CopyFromReadonly(CurrentOptions));
             ApplyConfiguration(configOptions);
         }
 
@@ -83,12 +86,12 @@ namespace WD.Logging
         {
             if (options.SizePerFile.SizeInBytes <= 1000)
             {
-                throw new ArgumentException("The file size have to be positive and at least 1000  bytes", nameof(ReadonlyLoggerOptions.SizePerFile));
+                throw new ArgumentException("The file size have to be positive and at least 1000  bytes", nameof(options));
             }
 
             if (string.IsNullOrWhiteSpace(options.FileName))
             {
-                throw new ArgumentException("The file name should be set", nameof(ReadonlyLoggerOptions.FileName));
+                throw new ArgumentException("The file name should be set", nameof(options));
             }
         }
     }
