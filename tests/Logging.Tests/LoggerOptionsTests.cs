@@ -27,20 +27,6 @@ namespace Logging.Tests
             sut.Level.Should().Be(level);
         }
 
-        [Test]
-        public void WithFile_SetFileNameProperty()
-        {
-            // Arrange
-            var fileName = Guid.NewGuid().ToString();
-            var sut = new LoggerOptions();
-
-            // Act
-            sut.WithFile(fileName);
-
-            // Assert
-            sut.FileName.Should().Be(fileName);
-        }
-
         [TestCase(true)]
         [TestCase(false)]
         public void Compress_SetIsCompressedProperty(bool isCompressed)
@@ -70,6 +56,159 @@ namespace Logging.Tests
             sut.ArchiveCount.Should().Be(archiveCount);
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ArchiveOnStart_SetArchiveOnStartProperty(bool archive)
+        {
+            // Arrange
+            var sut = new LoggerOptions();
+
+            // Act
+            sut.ArchiveOnStart(archive);
+
+            // Assert
+            sut.IsArchiveOnStart.Should().Be(archive);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("  \t \r\n \r \n ")]
+        public void WithLogMessageLayout_WithNullOrEmptyLayout_SetLogMessageLayoutProperty_ToDefault(
+            string logMessageLayout)
+        {
+            // Arrange
+            var sut = new LoggerOptions();
+
+            // Act
+            sut.WithLogMessageLayout(logMessageLayout);
+
+            // Assert
+            sut.LogMessageLayout.Should().BeNull();
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void AddDebugTarget_SetLogMessageLayoutProperty(bool debug)
+        {
+            // Arrange
+            var sut = new LoggerOptions();
+
+            // Act
+            sut.AddDebugTarget(debug);
+
+            // Assert
+            sut.LogToDebugStream.Should().Be(debug);
+        }
+
+        [TestCase(true, true, true)]
+        [TestCase(true, false, false)]
+        [TestCase(false, true, false)]
+        [TestCase(false, false, true)]
+        public void CopyFromReadonly_CreateNewInstance_WithReadonlyValues(bool compressed, bool archiveOnStart,
+            bool debug)
+        {
+            // Arrange
+            var filter = Guid.NewGuid().ToString();
+            var filename = Guid.NewGuid().ToString();
+            var fileCount = 11;
+            var fileSize = new FileSize {SizeType = SizeType.KibiByte, Size = 123456};
+            var logLevel = LogLevel.Information;
+            var logLayout = "${callsite}";
+            ReadonlyLoggerOptions readOnly = new LoggerOptions()
+                .WithLevel(logLevel)
+                .WithFilter(filter)
+                .WithFile(filename)
+                .WithMaxSize(fileSize)
+                .WithArchiveCount(fileCount)
+                .Compress(compressed)
+                .ArchiveOnStart(archiveOnStart)
+                .WithLogMessageLayout(logLayout)
+                .AddDebugTarget(debug);
+
+            // Act
+            var result = LoggerOptions.CopyFromReadonly(readOnly);
+
+            // Assert
+            result.ArchiveCount.Should().Be(fileCount);
+            result.FileName.Should().Be(filename);
+            result.Filter.Should().Be(filter);
+            result.IsArchiveOnStart.Should().Be(archiveOnStart);
+            result.IsCompressed.Should().Be(compressed);
+            result.Level.Should().Be(logLevel);
+            result.SizePerFile.SizeInBytes.Should().Be(fileSize.SizeInBytes);
+            result.LogMessageLayout.Should().Be(logLayout);
+            result.LogToDebugStream.Should().Be(debug);
+        }
+
+        [Test]
+        public void RemoveDebugTarget_SetLogMessageLayoutProperty_ToFalse()
+        {
+            // Arrange
+            var sut = new LoggerOptions();
+
+            // Act
+            sut.RemoveDebugTarget();
+
+            // Assert
+            sut.LogToDebugStream.Should().BeFalse();
+        }
+
+        [Test]
+        public void WithDefaultLogMessagelayout_SetLogMessageLayoutProperty_ToDefault()
+        {
+            // Arrange
+            var sut = new LoggerOptions();
+
+            // Act
+            sut.WithDefaultLogMessagelayout();
+
+            // Assert
+            sut.LogMessageLayout.Should().BeNull();
+        }
+
+        [Test]
+        public void WithFile_SetFileNameProperty()
+        {
+            // Arrange
+            var fileName = Guid.NewGuid().ToString();
+            var sut = new LoggerOptions();
+
+            // Act
+            sut.WithFile(fileName);
+
+            // Assert
+            sut.FileName.Should().Be(fileName);
+        }
+
+        [Test]
+        public void WithFilter_SetFilterProperty()
+        {
+            // Arrange
+            var filter = Guid.NewGuid().ToString();
+            var sut = new LoggerOptions();
+
+            // Act
+            sut.WithFilter(filter);
+
+            // Assert
+            sut.Filter.Should().Be(filter);
+        }
+
+        [Test]
+        public void WithLogMessageLayout_SetLogMessageLayoutProperty()
+        {
+            // Arrange
+            var logMessageLayout = Guid.NewGuid().ToString();
+            var sut = new LoggerOptions();
+
+            // Act
+            sut.WithLogMessageLayout(logMessageLayout);
+
+            // Assert
+            sut.LogMessageLayout.Should().Be(logMessageLayout);
+        }
+
         [Test]
         public void WithMaxSize_SetFileSizeProperty()
         {
@@ -89,34 +228,6 @@ namespace Logging.Tests
             sut.SizePerFile.SizeType.Should().Be(SizeType.KiBi);
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void ArchiveOnStart_SetArchiveOnStartProperty(bool archive)
-        {
-            // Arrange
-            var sut = new LoggerOptions();
-
-            // Act
-            sut.ArchiveOnStart(archive);
-
-            // Assert
-            sut.IsArchiveOnStart.Should().Be(archive);
-        }
-
-        [Test]
-        public void WithFilter_SetFilterProperty()
-        {
-            // Arrange
-            var filter = Guid.NewGuid().ToString();
-            var sut = new LoggerOptions();
-
-            // Act
-            sut.WithFilter(filter);
-
-            // Assert
-            sut.Filter.Should().Be(filter);
-        }
-
         [Test]
         public void WithoutFilter_ResetFilterProperty()
         {
@@ -130,39 +241,6 @@ namespace Logging.Tests
 
             // Assert
             sut.Filter.Should().BeNull();
-        }
-
-        [Test]
-        public void CopyFromReadonly_CreateNewInstance_WithReadonlyValues()
-        {
-            // Arrange
-            var filter = Guid.NewGuid().ToString();
-            var filename = Guid.NewGuid().ToString();
-            var fileCount = 11;
-            var fileSize = new FileSize{SizeType = SizeType.KibiByte, Size = 123456};
-            var compressed = true;
-            var archiveOnStart = true;
-            var logLevel = LogLevel.Information;
-            ReadonlyLoggerOptions readOnly = new LoggerOptions()
-                .WithLevel(logLevel)
-                .WithFilter(filter)
-                .WithFile(filename)
-                .WithMaxSize(fileSize)
-                .WithArchiveCount(fileCount)
-                .Compress(compressed)
-                .ArchiveOnStart(archiveOnStart);
-
-            // Act
-            var result = LoggerOptions.CopyFromReadonly(readOnly);
-
-            // Assert
-            result.ArchiveCount.Should().Be(fileCount);
-            result.FileName.Should().Be(filename);
-            result.Filter.Should().Be(filter);
-            result.IsArchiveOnStart.Should().Be(archiveOnStart);
-            result.IsCompressed.Should().Be(compressed);
-            result.Level.Should().Be(logLevel);
-            result.SizePerFile.SizeInBytes.Should().Be(fileSize.SizeInBytes);
         }
     }
 }
