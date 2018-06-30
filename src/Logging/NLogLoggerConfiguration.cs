@@ -12,7 +12,7 @@ namespace WD.Logging
         ///     Default log layout with 10 levels of exceptions
         /// </summary>
         public const string NLOG_LAYOUT =
-            "${longdate}|${level:uppercase=true}|${logger}|${message}|${exception:format=toString,Data:maxInnerExceptionLevel=10}";
+            "${longdate}|${level:uppercase=true}|${logger}|${callsite}|${message}|${exception:format=toString,Data:maxInnerExceptionLevel=10}";
 
         /// <inheritdoc />
         public virtual ReadonlyLoggerOptions CurrentOptions { get; private set; } = new ReadonlyLoggerOptions();
@@ -20,12 +20,7 @@ namespace WD.Logging
         /// <inheritdoc />
         public virtual void ApplyConfiguration(LoggerOptions options)
         {
-            if(options == null)
-            {
-                throw new ArgumentNullException(nameof(options), "Null options are not allowed");
-            }
-
-            CurrentOptions = options;
+            CurrentOptions = options ?? throw new ArgumentNullException(nameof(options), "Null options are not allowed");
 
             // Validate options
             ValidateOptions(CurrentOptions);
@@ -36,7 +31,7 @@ namespace WD.Logging
                 FileName = options.FileName,
                 ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.DateAndSequence,
                 ArchiveOldFileOnStartup = options.IsArchiveOnStart,
-                Layout = NLOG_LAYOUT,
+                Layout = options.LogMessageLayout ?? NLOG_LAYOUT,
                 EnableArchiveFileCompression = options.IsCompressed,
                 ArchiveAboveSize = options.SizePerFile.SizeInBytes,
                 MaxArchiveFiles = options.ArchiveCount
@@ -49,6 +44,19 @@ namespace WD.Logging
             var filter = string.IsNullOrWhiteSpace(options.Filter) ? "*" : options.Filter;
             var fileRule = new NLog.Config.LoggingRule(filter, options.Level.ToNLog(), fileTarget);
             configuration.LoggingRules.Add(fileRule);
+
+            // Debug
+            if (options.LogToDebugStream)
+            {
+                var debugTarget = new NLog.Targets.OutputDebugStringTarget("DebugLog")
+                {
+                    Layout = options.LogMessageLayout ?? NLOG_LAYOUT
+
+                };
+                configuration.AddTarget(debugTarget);
+                var debugRule = new NLog.Config.LoggingRule(filter, options.Level.ToNLog(), debugTarget);
+                configuration.LoggingRules.Add(debugRule);
+            }
 
             // Set configuration
             NLog.LogManager.Configuration = configuration;

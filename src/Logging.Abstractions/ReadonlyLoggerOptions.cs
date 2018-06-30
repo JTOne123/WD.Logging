@@ -1,5 +1,8 @@
 ﻿namespace WD.Logging.Abstractions
 {
+    /// <summary>
+    /// Logger optins (read only)
+    /// </summary>
     public class ReadonlyLoggerOptions
     {
         /// <summary>
@@ -36,5 +39,15 @@
         /// Log filter
         /// </summary>
         public virtual string Filter { get; protected set; } = "*";
+
+        /// <summary>
+        /// Layout for the log messages (default: null => default logger implementation)
+        /// </summary>
+        public virtual string LogMessageLayout { get; protected set; }
+
+        /// <summary>
+        /// Log also to debug output stream (default: false)
+        /// </summary>
+        public virtual bool LogToDebugStream { get; protected set; } = false;
     }
 }
