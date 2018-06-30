@@ -24,7 +24,7 @@ A generic abstraction for the logger to be used with dependency injection in Xam
 ```csharp
 ...
 containerRegistry.RegisterSingleton<ILoggerConfiguration, NLogLoggerConfiguration>();
-containerRegistry.Register(typeof(ILogger<>), typeof(NLogLoggerAdapter<>));
+containerRegistry.RegisterSingleton(typeof(ILogger<>), typeof(NLogLoggerAdapter<>));
 ...
 ```
 

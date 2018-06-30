@@ -1,7 +1,7 @@
 # 0.2
 
 - #1 Add dubug target
-- Extend the default log message layout for NLog with `{site}`
+- Extend the default log message layout for NLog with `{callsite}`
 - Fixed error for compress configuration
 
 # 0.1
