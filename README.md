@@ -24,7 +24,7 @@ A generic abstraction for the logger to be used with dependency injection in Xam
 ```csharp
 ...
 containerRegistry.RegisterSingleton<ILoggerConfiguration, NLogLoggerConfiguration>();
-containerRegistry.Register(typeof(ILogger<>), typeof(NLogLoggerAdapter<>));
+containerRegistry.RegisterSingleton(typeof(ILogger<>), typeof(NLogLoggerAdapter<>));
 ...
 ```
 
@@ -42,7 +42,11 @@ private void InitLogger()
             .WithArchiveCount(6)
             .Compress(false)
             .ArchiveOnStart(false)
-            .WithFilter("MyAssembly.Namespace.MayClass*")
+            .WithLogMessageLayout("${longdate};${logger};${message}")
+            .WithFilter("MyAssembly.Namespace.MyClass*")
+#if DEBUG
+            .AddDebugTarget()
+#endif
     );
 }
 ```
@@ -65,7 +69,7 @@ private void SetLogLevel(LogLevel level, string newFilter)
 ...
 public class MyClass
 {
-    private readonly ILogger<MyClass> _looger;
+    private readonly ILogger _looger;
 
     public MyClass(ILogger<MyClass> logger)
     {
