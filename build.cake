@@ -11,10 +11,10 @@ var configuration = Argument("configuration", "Release");
 
 #tool "nuget:?package=GitVersion.CommandLine&version=3.6.5"
 #tool "nuget:?package=NUnit.ConsoleRunner&version=3.8.0"
-#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.1.0"
-#tool "nuget:?package=JetBrains.dotCover.CommandLineTools&version=2017.3.3"
+#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.3.0"
+#tool "nuget:?package=JetBrains.dotCover.CommandLineTools&version=2018.1.2"
 
-#addin "nuget:?package=Cake.Sonar&version=1.0.6"
+#addin "nuget:?package=Cake.Sonar&version=1.1.0"
 
 #load "./build/paths.cake"
 #load "./build/names.cake"
@@ -68,6 +68,16 @@ Task("_restore")
 Task("_fixVersion")
     .Description("Set new assembly version generated from Git history")
     .Does(() => {
+        // Fix solution version data
+        CreateAssemblyInfo(Paths.ASSEMBLY_INFO_FILE, new AssemblyInfoSettings {
+                Company = "Eugen (WebDucer) Richter",
+                Copyright = Names.PROJECT_COPYRIGHTS
+            }
+            .AddMetadataAttribute("git_hash", _version.Sha)
+            .AddMetadataAttribute("sem_ver", _version.FullSemVer)
+            .AddMetadataAttribute("build_date", DateTime.Now.ToString("yyyy-MM-dd"))
+        );
+
         var versionSettings = new GitVersionSettings {
             UpdateAssemblyInfo = true,
             WorkingDirectory = "./src"

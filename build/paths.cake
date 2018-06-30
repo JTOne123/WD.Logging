@@ -10,6 +10,7 @@ public static class Paths {
     public const string SOLUTION_FILE = "./WD.Logging.sln";
     public const string SOLUTION_FILE_FOR_SONAR = "./WD.Logging.Sonar.sln";
     public const string PROJECT_FILE = "./src/Logging/Logging.csproj";
+    public const string ASSEMBLY_INFO_FILE = "./src/GlobalAssemblyInfo.cs";
 
     public const string TEST_RESULT_FILE = ARTIFACTS_OUTPUT + "TestResults.xml";
     public const string TEST_COVERAGE_RESULT_FILE = ARTIFACTS_OUTPUT + "TestCoverage.dcvr";
