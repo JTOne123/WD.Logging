@@ -5,6 +5,10 @@
     - Build date and
     - Git hash
 
+# 0.2.1
+
+- #2 fixed: Wrong call site name in log
+
 # 0.2
 
 - #1 Add dubug target
