@@ -12,7 +12,7 @@ namespace WD.Logging
         ///     Default log layout with 10 levels of exceptions
         /// </summary>
         public const string NLOG_LAYOUT =
-            "${longdate}|${level:uppercase=true}|${logger}|${callsite}|${message}|${exception:format=toString,Data:maxInnerExceptionLevel=10}";
+            "${longdate}|${level:uppercase=true}|${logger}|${callsite:skipFrames=1}|${message}|${exception:format=toString,Data:maxInnerExceptionLevel=10}";
 
         /// <inheritdoc />
         public virtual ReadonlyLoggerOptions CurrentOptions { get; private set; } = new ReadonlyLoggerOptions();
