@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NLog;
 using NLog.Targets;
@@ -17,16 +18,15 @@ namespace Logging.Tests
         private const string _INFO = "Information";
         private const string _DEBUG = "Debug";
         private const string _TRACE = "Trace";
-        private readonly Exception _FATAL_EX = new Exception(_FATAL);
-        private readonly Exception _ERROR_EX = new Exception(_ERROR);
-        private readonly Exception _WARN_EX = new Exception(_WARN);
-        private readonly Exception _INFO_EX = new Exception(_INFO);
-        private readonly Exception _DEBUG_EX = new Exception(_DEBUG);
-        private readonly Exception _TRACE_EX = new Exception(_TRACE);
+        private readonly Exception _fatalEx = new Exception(_FATAL);
+        private readonly Exception _errorEx = new Exception(_ERROR);
+        private readonly Exception _warnEx = new Exception(_WARN);
+        private readonly Exception _infoEx = new Exception(_INFO);
+        private readonly Exception _debugEx = new Exception(_DEBUG);
 
         private void ExecuteLogs(WD.Logging.Abstractions.ILogger sut)
         {
-            sut.Fatal(_FATAL_EX, _FATAL);
+            sut.Fatal(_fatalEx, _FATAL);
             sut.Error(_ERROR);
             sut.Warn(_WARN);
             sut.Info(_INFO);
@@ -36,11 +36,11 @@ namespace Logging.Tests
 
         private void ExecuteLogsWithException(WD.Logging.Abstractions.ILogger sut)
         {
-            sut.Fatal(_FATAL_EX, _FATAL);
-            sut.Error(_ERROR_EX, _ERROR);
-            sut.Warn(_WARN_EX, _WARN);
-            sut.Info(_INFO_EX, _INFO);
-            sut.Debug(_DEBUG_EX, _DEBUG);
+            sut.Fatal(_fatalEx, _FATAL);
+            sut.Error(_errorEx, _ERROR);
+            sut.Warn(_warnEx, _WARN);
+            sut.Info(_infoEx, _INFO);
+            sut.Debug(_debugEx, _DEBUG);
             sut.Trace(_TRACE);
         }
 
@@ -268,6 +268,23 @@ namespace Logging.Tests
                                                          LogLevel.Trace,
                                                          _TRACE,
                                                          string.Empty));
+        }
+
+        [Test]
+        public void LogRealCaller_ForSiteLog()
+        {
+            // Arrange
+            var target = new DebugTarget();
+            target.Layout = "${callsite:skipFrames=1}";
+            NLog.Config.SimpleConfigurator.ConfigureForTargetLogging(target, LogLevel.Trace);
+            var sut = new WD.Logging.NLogLoggerAdapter<NLogAdapterTests>();
+
+            // Act
+            ExecuteLogs(sut);
+
+            // Assert
+            target.Counter.Should().Be(6);
+            target.LastMessage.Should().Be($"{GetType().FullName}.{nameof(ExecuteLogs)}");
         }
     }
 }
