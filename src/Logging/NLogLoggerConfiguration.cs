@@ -48,10 +48,9 @@ namespace WD.Logging
             // Debug
             if (options.LogToDebugStream)
             {
-                var debugTarget = new NLog.Targets.OutputDebugStringTarget("DebugLog")
+                var debugTarget = new NLog.Targets.DebuggerTarget("DebugLog")
                 {
                     Layout = options.LogMessageLayout ?? NLOG_LAYOUT
-
                 };
                 configuration.AddTarget(debugTarget);
                 var debugRule = new NLog.Config.LoggingRule(filter, options.Level.ToNLog(), debugTarget);

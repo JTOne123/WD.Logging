@@ -1,3 +1,11 @@
+# 0.2.2
+
+- Fix #3: Replace `OutputDebugStringTarget` with `DebuggerTarget`. `OutputDebugStringTarget` does not exist in Android and iOS versions of NLog.
+
+# 0.2.1
+
+- Fix #2: Add skipFrames=1 to the default layout, to log the real caller name and not of the adapter method.
+
 # 0.2
 
 - #1 Add dubug target

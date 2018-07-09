@@ -142,11 +142,11 @@ namespace Logging.Tests
             // Debug
             if (debug)
             {
-                config.AllTargets.OfType<NLog.Targets.OutputDebugStringTarget>().Should().HaveCount(1);
+                config.AllTargets.OfType<NLog.Targets.DebuggerTarget>().Should().HaveCount(1);
             }
             else
             {
-                config.AllTargets.OfType<NLog.Targets.OutputDebugStringTarget>().Should().BeEmpty();
+                config.AllTargets.OfType<NLog.Targets.DebuggerTarget>().Should().BeEmpty();
             }
             //Layout
             if (sut.CurrentOptions.LogMessageLayout == null)
@@ -200,11 +200,11 @@ namespace Logging.Tests
             // Debug
             if (debug)
             {
-                config.AllTargets.OfType<NLog.Targets.OutputDebugStringTarget>().Should().HaveCount(1);
+                config.AllTargets.OfType<NLog.Targets.DebuggerTarget>().Should().HaveCount(1);
             }
             else
             {
-                config.AllTargets.OfType<NLog.Targets.OutputDebugStringTarget>().Should().BeEmpty();
+                config.AllTargets.OfType<NLog.Targets.DebuggerTarget>().Should().BeEmpty();
             }
             //Layout
             if (sut.CurrentOptions.LogMessageLayout == null)
