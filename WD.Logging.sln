@@ -7,18 +7,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{061BCB09-321
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{695C9382-9296-4A77-BE6D-8B95376C074F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "src\Logging\Logging.csproj", "{48E0350F-5BFF-43B1-9440-2C1605A29D85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "src\Logging\Logging.csproj", "{48E0350F-5BFF-43B1-9440-2C1605A29D85}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C29CEEAD-5DA1-45A4-823B-F7B929E539D5}"
 	ProjectSection(SolutionItems) = preProject
 		build.cake = build.cake
+		CHANGELOG = CHANGELOG
 		build\names.cake = build\names.cake
 		build\paths.cake = build\paths.cake
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging.Tests", "tests\Logging.Tests\Logging.Tests.csproj", "{D157649C-6A06-49E0-ABAD-F27230F7EF1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging.Abstractions", "src\Logging.Abstractions\Logging.Abstractions.csproj", "{F2A996EF-A3BF-40CC-BDAA-2344C31566D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging.Abstractions", "src\Logging.Abstractions\Logging.Abstractions.csproj", "{F2A996EF-A3BF-40CC-BDAA-2344C31566D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
