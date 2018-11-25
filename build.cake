@@ -9,12 +9,12 @@ var configuration = Argument("configuration", "Release");
 // TOOLS / ADDINS / LOADS
 ///////////////////////////////////////////////////////////////////////////////
 
-#tool "nuget:?package=GitVersion.CommandLine&version=3.6.5"
-#tool "nuget:?package=NUnit.ConsoleRunner&version=3.8.0"
-#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.3.0"
-#tool "nuget:?package=JetBrains.dotCover.CommandLineTools&version=2018.1.2"
+#tool "nuget:?package=GitVersion.CommandLine&version=4.0.0"
+#tool "nuget:?package=NUnit.ConsoleRunner&version=3.9.0"
+#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.3.1"
+#tool "nuget:?package=JetBrains.dotCover.CommandLineTools&version=2018.2.3"
 
-#addin "nuget:?package=Cake.Sonar&version=1.1.0"
+#addin "nuget:?package=Cake.Sonar&version=1.1.16"
 
 #load "./build/paths.cake"
 #load "./build/names.cake"
@@ -256,6 +256,17 @@ Task("_createNuGetAbstractionsPackage")
             notes.Insert(0, "# " + releaseNote.Version);
             nugetSettings.ReleaseNotes = notes;
         }
+        
+        // Source link
+        if(!BuildSystem.IsLocalBuild) {
+            nugetSettings.ProjectUrl = new Uri("https://github.com/WebDucer/WD.Logging");
+            nugetSettings.Repository = new NuGetRepository {
+                Type = "git",
+                Commit = _version.Sha,
+                Branch = _version.BranchName,
+                Url = "https://github.com/WebDucer/WD.Logging.git"
+            };
+        }
 
         NuGetPack(nugetSettings);
     });
@@ -295,6 +306,17 @@ Task("_createNuGetPackage")
             var notes = releaseNote.Notes.ToList();
             notes.Insert(0, "# " + releaseNote.Version);
             nugetSettings.ReleaseNotes = notes;
+        }
+
+        // Source link
+        if(!BuildSystem.IsLocalBuild) {
+            nugetSettings.ProjectUrl = new Uri("https://github.com/WebDucer/WD.Logging");
+            nugetSettings.Repository = new NuGetRepository {
+                Type = "git",
+                Commit = _version.Sha,
+                Branch = _version.BranchName,
+                Url = "https://github.com/WebDucer/WD.Logging.git"
+            };
         }
 
         NuGetPack(nugetSettings);

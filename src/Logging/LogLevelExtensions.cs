@@ -1,72 +1,77 @@
-﻿namespace WD.Logging
+﻿using WD.Logging.Abstractions;
+
+namespace WD.Logging
 {
+    /// <summary>
+    ///     Extensions for log level
+    /// </summary>
     public static class LogLevelExtensions
     {
         /// <summary>
-        /// Convert NLog log level to library log level
+        ///     Convert NLog log level to library log level
         /// </summary>
         /// <returns>Library log level</returns>
         /// <param name="level">NLog log level</param>
-        public static WD.Logging.Abstractions.LogLevel ToLib(this NLog.LogLevel level)
+        public static LogLevel ToLib(this NLog.LogLevel level)
         {
             if (level == NLog.LogLevel.Debug)
             {
-                return Abstractions.LogLevel.Debug;
+                return LogLevel.Debug;
             }
 
             if (level == NLog.LogLevel.Error)
             {
-                return Abstractions.LogLevel.Error;
+                return LogLevel.Error;
             }
 
             if (level == NLog.LogLevel.Fatal)
             {
-                return Abstractions.LogLevel.Fatal;
+                return LogLevel.Fatal;
             }
 
             if (level == NLog.LogLevel.Info)
             {
-                return Abstractions.LogLevel.Information;
+                return LogLevel.Information;
             }
 
             if (level == NLog.LogLevel.Trace)
             {
-                return Abstractions.LogLevel.Trace;
+                return LogLevel.Trace;
             }
 
             if (level == NLog.LogLevel.Warn)
             {
-                return Abstractions.LogLevel.Warning;
+                return LogLevel.Warning;
             }
 
-            return Abstractions.LogLevel.Off;
+            return LogLevel.Off;
         }
 
         /// <summary>
-        /// Convert library log level to NLog log level
+        ///     Convert library log level to NLog log level
         /// </summary>
         /// <returns>NLog log level</returns>
         /// <param name="level">Library log level</param>
-        public static NLog.LogLevel ToNLog(this Abstractions.LogLevel level)
+        public static NLog.LogLevel ToNLog(this LogLevel level)
         {
             switch (level)
             {
-                case Abstractions.LogLevel.Debug:
+                case LogLevel.Debug:
                     return NLog.LogLevel.Debug;
 
-                case Abstractions.LogLevel.Error:
+                case LogLevel.Error:
                     return NLog.LogLevel.Error;
 
-                case Abstractions.LogLevel.Fatal:
+                case LogLevel.Fatal:
                     return NLog.LogLevel.Fatal;
 
-                case Abstractions.LogLevel.Information:
+                case LogLevel.Information:
                     return NLog.LogLevel.Info;
 
-                case Abstractions.LogLevel.Trace:
+                case LogLevel.Trace:
                     return NLog.LogLevel.Trace;
 
-                case Abstractions.LogLevel.Warning:
+                case LogLevel.Warning:
                     return NLog.LogLevel.Warn;
 
                 default:
