@@ -28,6 +28,7 @@ public static class Paths {
                 Id = (string)s.Attribute("Include"),
                 Version = (string)s.Attribute("Version") ?? (string)s.Element("Version"),
                 TargetFramework = targetFramework })
+            .Where(w => !w.Id.StartsWith("Microsoft.SourceLink"))
             .ToList();
     }
 
