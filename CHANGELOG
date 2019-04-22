@@ -1,9 +1,6 @@
-# 0.4
+# 0.3
 
 - #4: Add Source Link support to package
-
-## 0.3
-
 - Add more meta info to assembly on build
     - Semantic version
     - Build date and
