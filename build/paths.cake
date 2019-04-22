@@ -23,6 +23,16 @@ public static class Paths {
     public static readonly Uri PROJECT_URL = new Uri("https://github.com/WebDucer/WD.Logging");
     public const string SOURCE_URL = "https://github.com/WebDucer/WD.Logging.git";
 
+    public static string Quote(Cake.Core.IO.Path path) {
+        if(path == null) {
+            return string.Empty;
+        }
+
+        var pathString = path.ToString();
+
+        return string.Format("\"{0}\"", pathString.Trim('"'));
+    }
+
     public static IList<NuSpecDependency> GetDependenciesFromProjectFile(string projectFile, string targetFramework = null){
         return XDocument.Load(projectFile)
             .Descendants("PackageReference")
