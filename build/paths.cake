@@ -12,7 +12,8 @@ public static class Paths {
     public const string PROJECT_FILE = "./src/Logging/Logging.csproj";
     public const string ASSEMBLY_INFO_FILE = "./src/GlobalAssemblyInfo.cs";
 
-    public const string TEST_RESULT_FILE = ARTIFACTS_OUTPUT + "TestResults.xml";
+    public const string TEST_PROJECT_FILE = "./tests/Logging.Tests/Logging.Tests.csproj";
+    public const string TEST_RESULT_FILE = "TestResults.trx";
     public const string TEST_COVERAGE_RESULT_FILE = ARTIFACTS_OUTPUT + "TestCoverage.dcvr";
     public const string TEST_COVERAGE_RESULT_FILE_XML = ARTIFACTS_OUTPUT + "TestCoverage.xml";
     public const string TEST_COVERAGE_RESULT_FILE_HTML = ARTIFACTS_OUTPUT + "TestCoverage.html";
@@ -20,6 +21,7 @@ public static class Paths {
 
     public static readonly Uri LICENSE_URL = new Uri("https://github.com/WebDucer/WD.Logging/blob/develop/LICENSE");
     public static readonly Uri PROJECT_URL = new Uri("https://github.com/WebDucer/WD.Logging");
+    public const string SOURCE_URL = "https://github.com/WebDucer/WD.Logging.git";
 
     public static IList<NuSpecDependency> GetDependenciesFromProjectFile(string projectFile, string targetFramework = null){
         return XDocument.Load(projectFile)

@@ -1,4 +1,5 @@
 public static class Names {
+    public const string DEFAULT_CONFIGURATION = "Release";
     public const string SONARCUBE_API_TOKEN = "CI_CONAR_TOKEN";
     public const string SONARQUBE_URI = "CI_SONAR_URL";
     public const string NUGET_URI = "NUGET_REPO_URL";
