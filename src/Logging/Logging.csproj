@@ -19,9 +19,16 @@
     <ProjectReference Include="..\Logging.Abstractions\Logging.Abstractions.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NLog" Version="4.5.6" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NLog" Version="4.6.2" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="LogLevelExtension.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
   </ItemGroup>
 </Project>

@@ -9,12 +9,11 @@ var configuration = Argument("configuration", "Release");
 // TOOLS / ADDINS / LOADS
 ///////////////////////////////////////////////////////////////////////////////
 
-#tool "nuget:?package=GitVersion.CommandLine&version=3.6.5"
-#tool "nuget:?package=NUnit.ConsoleRunner&version=3.8.0"
-#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.1.0"
-#tool "nuget:?package=JetBrains.dotCover.CommandLineTools&version=2017.3.3"
+#tool "nuget:?package=GitVersion.CommandLine&version=4.0.0"
+#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.6.0"
+#tool "nuget:?package=JetBrains.dotCover.CommandLineTools&version=2018.3.4"
 
-#addin "nuget:?package=Cake.Sonar&version=1.0.6"
+#addin "nuget:?package=Cake.Sonar&version=1.1.18"
 
 #load "./build/paths.cake"
 #load "./build/names.cake"
@@ -68,6 +67,16 @@ Task("_restore")
 Task("_fixVersion")
     .Description("Set new assembly version generated from Git history")
     .Does(() => {
+        // Fix solution version data
+        CreateAssemblyInfo(Paths.ASSEMBLY_INFO_FILE, new AssemblyInfoSettings {
+                Company = "Eugen (WebDucer) Richter",
+                Copyright = Names.PROJECT_COPYRIGHTS
+            }
+            .AddMetadataAttribute("git_hash", _version.Sha)
+            .AddMetadataAttribute("sem_ver", _version.FullSemVer)
+            .AddMetadataAttribute("build_date", DateTime.Now.ToString("yyyy-MM-dd"))
+        );
+
         var versionSettings = new GitVersionSettings {
             UpdateAssemblyInfo = true,
             WorkingDirectory = "./src"
@@ -88,6 +97,8 @@ Task("_buildLibraries")
                     .SetConfiguration(configuration)
                     .WithTarget("Build")
                     .WithProperty("OutputPath", outputPath)
+                    .WithProperty("ContinuousIntegrationBuild", "true")
+                    .WithProperty("DeterministicSourcePaths", "true")
             );
         }
     });
@@ -108,16 +119,15 @@ Task("_buildLibraryForSonar")
 Task("_buildTests")
     .Description("Build test projects")
     .Does(() => {
-        var testProjects = GetFiles("./tests/**/*.Tests.csproj");
-        var outputPath = MakeAbsolute(Directory(Paths.TEST_OUTPUT)).FullPath.Quote();
-        
-        foreach(var testProject in testProjects) {
-            MSBuild(testProject, buildOptions =>
-                buildOptions
-                    .SetConfiguration(configuration)
-                    .WithTarget("Build")
-                    .WithProperty("OutputPath", outputPath)
-            );
+        var testProjects = GetFiles("./tests/**/*.csproj");
+        var outputPath = Paths.Quote(MakeAbsolute(Directory(Paths.TEST_OUTPUT)));
+
+        foreach (var project in testProjects)
+        {
+            MSBuild(project, buildSettings => {
+                buildSettings.SetConfiguration(Names.DEFAULT_CONFIGURATION)
+                    .WithTarget("Build");
+            });
         }
     });
 
@@ -125,31 +135,36 @@ Task("_runOnlyTests")
     .Description("Run all tests from test folder")
     .WithCriteria(IsRunningOnUnix())
     .Does(() => {
-        var testFiles = GetFiles(Paths.TEST_OUTPUT + "*.Tests.dll");
+        var outputDirectory = MakeAbsolute(Directory(Paths.ARTIFACTS_OUTPUT));
 
-        var testSettings = new NUnit3Settings {
-            Results = new [] { new NUnit3Result { FileName = Paths.TEST_RESULT_FILE }},
+        var testSettings = new DotNetCoreTestSettings {
+            Logger = $"trx;logfilename={Paths.TEST_RESULT_FILE}",
+            ResultsDirectory = outputDirectory,
+            NoBuild = true,
+            Configuration = Names.DEFAULT_CONFIGURATION
         };
 
-        NUnit3(testFiles, testSettings);
+        DotNetCoreTest(Paths.TEST_PROJECT_FILE, testSettings);
     });
 
 Task("_runCodeCoverageTests")
     .Description("Run all unit tests with code coverage analysis")
     .WithCriteria(IsRunningOnWindows())
     .Does(() => {
-        var testFiles = GetFiles(Paths.TEST_OUTPUT + "*.Tests.dll");
+        var outputDirectory = MakeAbsolute(Directory(Paths.ARTIFACTS_OUTPUT));
 
-        var testSettings = new NUnit3Settings {
-            Results = new [] { new NUnit3Result { FileName = Paths.TEST_RESULT_FILE }},
+        var testSettings = new DotNetCoreTestSettings {
+            Logger = $"trx;logfilename={Paths.TEST_RESULT_FILE}",
+            ResultsDirectory = outputDirectory,
+            NoBuild = true,
+            Configuration = Names.DEFAULT_CONFIGURATION
         };
 
         var coverSettings = new DotCoverCoverSettings {}
             .WithFilter("+:assembly=" + Names.PROJECT_ID)
             .WithFilter("+:assembly=" + Names.PROJECT_ID_ABSTRACTIONS);
-        
-        DotCoverCover(tools =>
-            tools.NUnit3(testFiles, testSettings),
+
+        DotCoverCover(tools => tools.DotNetCoreTest(Paths.TEST_PROJECT_FILE, testSettings),
             Paths.TEST_COVERAGE_RESULT_FILE,
             coverSettings
         );
@@ -170,7 +185,8 @@ Task("_sendTestResultsOnAppVeyor")
     .Description("Send unit tests result, if running on app veyor CI")
     .WithCriteria(AppVeyor.IsRunningOnAppVeyor)
     .Does(() => {
-        BuildSystem.AppVeyor.UploadTestResults(Paths.TEST_RESULT_FILE, AppVeyorTestResultsType.NUnit3);
+        var testResultFile = GetFiles(Paths.ARTIFACTS_OUTPUT + "*.trx").Single();
+        BuildSystem.AppVeyor.UploadTestResults(testResultFile, AppVeyorTestResultsType.MSTest);
     });
 
 Task("_runTests")
@@ -232,6 +248,12 @@ Task("_createNuGetAbstractionsPackage")
             ProjectUrl = Paths.PROJECT_URL,
             OutputDirectory = Paths.ARTIFACTS_OUTPUT,
             BasePath = Paths.BUILD_OUTPUT,
+            Repository = new NuGetRepository {
+                Type = "git",
+                Commit = _version.Sha,
+                Branch = _version.BranchName,
+                Url = Paths.SOURCE_URL
+            },
             Files = new [] {
                 new NuSpecContent {Source = Names.PROJECT_ID_ABSTRACTIONS + ".dll", Target = netStandardTarget},
                 new NuSpecContent {Source = Names.PROJECT_ID_ABSTRACTIONS + ".pdb", Target = netStandardTarget},
@@ -271,6 +293,12 @@ Task("_createNuGetPackage")
             ProjectUrl = Paths.PROJECT_URL,
             OutputDirectory = Paths.ARTIFACTS_OUTPUT,
             BasePath = Paths.BUILD_OUTPUT,
+            Repository = new NuGetRepository {
+                Type = "git",
+                Commit = _version.Sha,
+                Branch = _version.BranchName,
+                Url = Paths.SOURCE_URL
+            },
             Files = new [] {
                 new NuSpecContent {Source = Names.PROJECT_ID + ".dll", Target = netStandardTarget},
                 new NuSpecContent {Source = Names.PROJECT_ID + ".pdb", Target = netStandardTarget},
